@@ -11,7 +11,7 @@ risk_reduction_lowest = function(r2,K,n)
     y = dnorm(t)*pnorm(arg, lower.tail=F)^n
     return(y)
   }
-  risk= integrate(integrand_lowest,-Inf,Inf)$value
+  risk = integrate(integrand_lowest,-Inf,Inf)$value
   reduction = (K-risk)/K
   return(reduction)
 }
