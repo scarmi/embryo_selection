@@ -1,10 +1,10 @@
 
 library(MASS)
 
-risk_reduction = function(r2,method,k,n=10,q=0.01)
+risk_reduction = function(r2,method,K,n=10,q=0.01)
 {
   r = sqrt(r2)
-  zk = qnorm(k, lower.tail=F)
+  zk = qnorm(K, lower.tail=F)
   if (method==1) # Exclude high-risk, q-percentile
   {
     zq = qnorm(q, lower.tail=F)
@@ -46,7 +46,7 @@ risk_reduction = function(r2,method,k,n=10,q=0.01)
     }
     risk= integrate(integrand4,-Inf,Inf)$value
   }
-  reduction = (k-risk)/k
+  reduction = (K-risk)/K
   return(reduction)
 }
 
