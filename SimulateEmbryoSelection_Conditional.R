@@ -9,8 +9,18 @@ qs = seq(0,0.4,by=0.01)
 n = 5
 ns = seq(1,20)
 
+relative=F
+
+if (relative) {
+  out_name_hre = "./Data/high_risk_exclude_sim_cond.rds"
+  out_name_lrp = "./Data/select_lowest_risk_sim_cond.rds"
+} else {
+  out_name_hre = "./Data/high_risk_exclude_sim_cond_abs.rds"
+  out_name_lrp = "./Data/select_lowest_risk_sim_cond_abs.rds"
+}
+
 risk_red_highrisk_sim_all = array(numeric(length(qfs)*length(r2s)*length(qs)),c(length(qfs),length(r2s),length(qs)))
-# risk_red_lowestrisk_sim_all = array(numeric(length(qfs)*length(r2s)*length(ns)),c(length(qfs),length(r2s),length(ns)))
+risk_red_lowestrisk_sim_all = array(numeric(length(qfs)*length(r2s)*length(ns)),c(length(qfs),length(r2s),length(ns)))
 
 for (qi in seq_along(qfs))
 {
@@ -22,10 +32,10 @@ for (qi in seq_along(qfs))
   {
     r2 = r2s[ri]
     cat(sprintf('\nr2=%g\n',r2))
-    risk_red_highrisk_sim_all[qi,ri,] = simulate_exclude_high(r2,K,n,qs,1000000,T,qf,qm)
-    # risk_red_lowestrisk_sim_all[qi,ri,] = simulate_lowest_risk(r2,K,ns,1000000,T,qf,qm)
+    risk_red_highrisk_sim_all[qi,ri,] = simulate_exclude_high(r2,K,n,qs,1000000,T,qf,qm,relative)
+    risk_red_lowestrisk_sim_all[qi,ri,] = simulate_lowest_risk(r2,K,ns,1000000,T,qf,qm,relative)
   }
 }
 
-saveRDS(risk_red_highrisk_sim_all, file = "./Data/high_risk_exclude_sim_cond.rds")
-# saveRDS(risk_red_lowestrisk_sim_all, file = "./Data/select_lowest_risk_sim_cond.rds")
+saveRDS(risk_red_highrisk_sim_all, file = out_name_hre)
+saveRDS(risk_red_lowestrisk_sim_all, file = out_name_lrp)

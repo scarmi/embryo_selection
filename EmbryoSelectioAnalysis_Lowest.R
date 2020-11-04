@@ -16,7 +16,7 @@ risk_reduction_lowest = function(r2,K,n)
   return(reduction)
 }
 
-risk_reduction_lowest_conditional = function(r2,K,n,qf,qm)
+risk_reduction_lowest_conditional = function(r2,K,n,qf,qm,relative=T)
 {
   r = sqrt(r2)
   zk = qnorm(K, lower.tail=F)
@@ -31,11 +31,15 @@ risk_reduction_lowest_conditional = function(r2,K,n,qf,qm)
     return(y)
   }
   risk = integrate(integrand_lowest_cond,-Inf,Inf)$value
-  reduction = (baseline-risk)/baseline
+  if (relative) {
+    reduction = (baseline-risk)/baseline
+  } else {
+    reduction = baseline-risk
+  }
   return(reduction)
 }
 
-simulate_lowest_risk = function(r2,K,ns,nfam=10000,parents_known=F,qf,qm)
+simulate_lowest_risk = function(r2,K,ns,nfam=10000,parents_known=F,qf,qm,relative=T)
 {
   scores = numeric(nfam)
   disease_count = numeric(length(ns))
@@ -81,6 +85,10 @@ simulate_lowest_risk = function(r2,K,ns,nfam=10000,parents_known=F,qf,qm)
       baseline[i] = K
     }
   }
-  risk_red_sim = (baseline-disease_count/nfam)/baseline
+  if (relative) {
+    risk_red_sim = (baseline-disease_count/nfam)/baseline
+  } else {
+    risk_red_sim = baseline-disease_count/nfam
+  }
   return(risk_red_sim)
 }
