@@ -1,5 +1,5 @@
 
-relative = F
+relative = T
 if (relative) 
 {
   ymax=99
@@ -30,6 +30,17 @@ qfs = c(50,98,98,98)
 qms = c(50,25,50,98)
 
 colors = c('Maroon','DarkCyan','DarkSlateBlue')
+
+baseline_risk = function(r2,K,qf,qm)
+{
+  r = sqrt(r2)
+  zk = qnorm(K, lower.tail=F)
+  zqf = qnorm(qf/100)
+  zqm = qnorm(qm/100)
+  c = (zqf+zqm)/2 * r
+  baseline= pnorm((zk-c)/sqrt(1-r^2/2),lower.tail=F)
+  return(baseline)
+}
 
 ######### Exclude high risk ############
 
@@ -68,10 +79,12 @@ for (qi in seq_along(qfs))
   for (ri in seq_along(r2s))
   {
     r2 = r2s[ri]
-    legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)))
+    baseline = round(baseline_risk(r2,K,qf,qm),2)*100
+    legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)*', bl='*.(baseline)*'%'))
+    # legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)))
   }
 
-  legend(leg_pos_hre,legs,col=colors,pch=0:2,bty='n',cex=1.3,text.col='DarkBlue',lwd=2)
+  legend(leg_pos_hre,legs,col=colors,pch=0:2,bty='n',cex=1.2,text.col='DarkBlue',lwd=2)
   text(4,text_pos,labels[qi],cex=2)
 }
 dev.off()
@@ -112,7 +125,9 @@ for (qi in seq_along(qfs))
   for (ri in seq_along(r2s))
   {
     r2 = r2s[ri]
-    legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)))
+    baseline = round(baseline_risk(r2,K,qf,qm),2)*100
+    legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)*', bl='*.(baseline)*'%'))
+    # legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)))
   }
   legend(leg_pos_lrp,legs,col=colors,pch=0:2,bty='n',cex=1.3,text.col='DarkBlue',lwd=2)
   text(3,text_pos,labels[qi],cex=2)
