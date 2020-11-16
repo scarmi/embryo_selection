@@ -6,8 +6,8 @@ qs = seq(0,0.4,by=0.01)
 n = 10
 ns = seq(1,20)
 
-risk_red_highrisk_sim_all = array(numeric(length(Ks)*length(r2s)*length(qs)),c(length(Ks),length(r2s),length(qs)))
-risk_red_lowestrisk_sim_all = array(numeric(length(Ks)*length(r2s)*length(ns)),c(length(Ks),length(r2s),length(ns)))
+risk_red_highrisk_sim_all = array(0,c(length(Ks),length(r2s),length(qs)))
+risk_red_lowestrisk_sim_all = array(0,c(length(Ks),length(r2s),length(ns)))
 
 for (ki in seq_along(Ks))
 {

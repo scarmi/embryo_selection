@@ -2,7 +2,7 @@
 r2s = c(0.05,0.1,0.3)
 Ks = c(0.01,0.05,0.2)
 colors = c('Maroon','DarkCyan','DarkSlateBlue')
-nhre = 10
+nhre = 5
 
 if (nhre==10)
 {
