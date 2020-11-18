@@ -20,7 +20,8 @@ if (relative)
   output_name_lrp = "../Figures/LowestRisk_ConditionalParentalStatus_Absolute.png"
 }
 
-# input_name_hre = "./Data/high_risk_exclude_sim_cond_parents_abs.rds"
+input_name_sim_hre_prefix = "./Data/Parental/high_risk_exclude_sim_cond_parents"
+input_name_th_hre_prefix = "./Data/Parental/high_risk_exclude_th_cond_parents"
 input_name_sim_lrp = './Data/select_lowest_risk_sim_cond_parents.rds'
 input_name_th_lrp = './Data/select_lowest_risk_th_cond_parents.rds'
 
@@ -34,15 +35,11 @@ desc = c('both Healthy','one sick','both sick')
 colors = c('Maroon','DarkCyan','DarkSlateBlue')
 
 ######### Exclude high risk ############
-
-if (F)
-{
   
-qs = seq(0,0.4,by=0.05)
+qs = seq(0,0.4,by=0.02)
 n = 5
 labels = c('A','B','C')
 
-# risk_red_highrisk_sim_all = readRDS(file = input_name_hre)
 png(output_name_hre,3200,1000,res=300)
 
 par(mfrow=c(1,length(dfs)),mar=c(4,5.5,2,2),yaxs='i',xaxs='i')
@@ -55,24 +52,29 @@ for (di in seq_along(dfs))
   for (ri in seq_along(r2s))
   {
     r2 = r2s[ri]
-    # risk_red_sim = risk_red_highrisk_sim_all[di,ri,]
+    
+    risk_red_sim = numeric(length(qs))
     risk_red_th = numeric(length(qs))
-    for (i in seq_along(qs))
+    for (qi in seq_along(qs))
     {
-      q = qs[i]
-      res = risk_reduction_exclude_family_history(r2,h2,K,q,n,df,dm)
+      q = qs[qi]
+      
+      risk_red_highrisk_sim = readRDS(file = sprintf("%s_r_%d_q_%d.rds",input_name_sim_hre_prefix,ri,qi))
+      risk_red_highrisk_th = readRDS(file = sprintf("%s_r_%d_q_%d.rds",input_name_th_hre_prefix,ri,qi))
       if (relative) {
-        risk_red_th[i] = res[3]
+        risk_red_sim[qi] = risk_red_highrisk_sim[di,1]
+        risk_red_th[qi] = risk_red_highrisk_th[di,1]
       } else {
-        risk_red_th[i] = res[4]
+        risk_red_sim[qi] = risk_red_highrisk_sim[di,2]
+        risk_red_th[qi] = risk_red_highrisk_th[di,2]
       }
     }
-    # points(qs*100,risk_red_sim*100,cex=1.3,lwd=1.5,col=colors[ri],pch=ri-1)
+    points(qs*100,risk_red_sim*100,cex=1.3,lwd=1.5,col=colors[ri],pch=ri-1)
     lines(qs*100,risk_red_th*100,lwd=1.8,col=colors[ri],lty=1)
     
-    index = 3
-    # segments(qs[index]*100,-10,qs[index]*100,risk_red_sim[index]*100,col='black',lty=1,lwd=2)
-    # segments(qs[index]*100,risk_red_sim[index]*100,-10,risk_red_sim[index]*100,col='black',lty=1,lwd=2)
+    index = 2
+    segments(qs[index]*100,-10,qs[index]*100,risk_red_sim[index]*100,col='black',lty=1,lwd=2)
+    segments(qs[index]*100,risk_red_sim[index]*100,-10,risk_red_sim[index]*100,col='black',lty=1,lwd=2)
   }
   legs = numeric(length(r2s))
   for (ri in seq_along(r2s))
@@ -82,14 +84,12 @@ for (di in seq_along(dfs))
   }
   
   legend(leg_pos_hre,legs,col=colors,pch=0:2,bty='n',cex=1.2,text.col='DarkBlue',lwd=2)
-  text(4,text_pos,labels[di],cex=2)
   
-  baseline = res[1]*100
-  text(4,text_pos-10,sprintf("Basline: %.2f%%",basline))
+  # Here we're using the lowest risk strategy, but just for computing the baseline
+  baseline = risk_reduction_lowest_family_history(0,h2,K,1,df,dm)[1]*100
+  text(11,text_pos,sprintf('%s, baseline=%.1f%%',labels[di],baseline),cex=1.3)
 }
 dev.off()
-
-}
 
 ######### Select lowest risk ############
 
@@ -130,6 +130,6 @@ for (di in seq_along(dfs))
   legend(leg_pos_lrp,legs,col=colors,pch=0:2,bty='n',cex=1.3,text.col='DarkBlue',lwd=2)
   
   baseline = risk_reduction_lowest_family_history(0,h2,K,1,df,dm)[1]*100
-  text(7,text_pos,sprintf('%s, baseline=%.1f%%',labels[di],baseline),cex=1.3)
+  text(6,text_pos,sprintf('%s, baseline=%.1f%%',labels[di],baseline),cex=1.3)
 }
 dev.off()
