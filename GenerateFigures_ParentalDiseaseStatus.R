@@ -48,7 +48,7 @@ for (di in seq_along(dfs))
 {
   df = dfs[di]
   dm = dms[di]
-  plot(0,type='n',xlab="Percentile PRS to exclude",ylab=ylabel,cex.lab=1.5,cex.axis=1.25,cex.main=1.15,main=sprintf('HR exclusion, %s',desc[di]),font.main=1,ylim=c(0,ymax),xlim=c(0,max(qs)*100))
+  plot(0,type='n',xlab="Percentile PRS to exclude",ylab=ylabel,cex.lab=1.5,cex.axis=1.25,cex.main=1.3,main=sprintf('HR exclusion, %s',desc[di]),font.main=1,ylim=c(0,ymax),xlim=c(0,max(qs)*100))
   for (ri in seq_along(r2s))
   {
     r2 = r2s[ri]

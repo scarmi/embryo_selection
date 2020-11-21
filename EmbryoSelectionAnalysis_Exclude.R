@@ -79,6 +79,37 @@ risk_reduction_exclude = function(r2,K,q,n)
   return(reduction)
 }
 
+# Tried to vectorize the integrands, but time saving was very minor
+risk_reduction_exclude_vec = function(r2,K,q,n)
+{
+  r = sqrt(r2)
+  zk = qnorm(K, lower.tail=F)
+  zq = qnorm(q, lower.tail=F)
+  integrand_t = function(t,u)
+  {
+    y = dnorm(t)*pnorm((zk-r/sqrt(2)*(u+t))/sqrt(1-r^2),lower.tail=F)
+    return(y)
+  }
+  integrand_u = function(u)
+  {
+    beta = zq*sqrt(2)-u
+    internal_int = integrate(integrand_t,-Inf,beta,u)$value
+    denom = pnorm(beta)
+    if (denom==0) {denom=1e-300} # Avoid dividing by zero
+    numer = dnorm(u)*(1-pnorm(beta,lower.tail=F)^n) * internal_int
+    term1 = numer/denom
+    
+    internal_int = integrate(integrand_t,beta,Inf,u)$value
+    term2 = dnorm(u)*pnorm(beta,lower.tail=F)^(n-1) * internal_int
+    y = term1 + term2
+    return(y)
+  }
+  integrand_u_vec = Vectorize(integrand_u,"u")
+  risk = integrate(integrand_u_vec,-Inf,Inf)$value
+  reduction = (K-risk)/K
+  return(reduction)
+}
+
 risk_reduction_exclude_conditional = function(r2,K,q,n,qf,qm,relative=T)
 {
   r = sqrt(r2)
