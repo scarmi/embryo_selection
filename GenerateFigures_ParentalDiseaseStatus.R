@@ -31,7 +31,7 @@ h2 = 0.4
 dms = c(F,T,T)
 dfs = c(F,F,T)
 
-desc = c('both Healthy','one sick','both sick')
+desc = c('both healthy','one sick','both sick')
 colors = c('Maroon','DarkCyan','DarkSlateBlue')
 
 ######### Exclude high risk ############
