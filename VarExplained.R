@@ -2,9 +2,9 @@
 K = 0.01
 nc = 897
 nt = 1629
-P = nc/(nc+nt)
 r2 = 0.09
 
+P = nc/(nc+nt)
 t = qnorm(1-K)
 z = dnorm(t)
 m = z/K

@@ -1,7 +1,7 @@
 
 library(MASS)
 
-simulate_exclude_high = function(r2,K,n,qs,nfam=10000,parents_known,qf,qm,relative=T)
+simulate_exclude_high = function(r2,K,n,qs,nfam=10000,parents_known,qf,qm,relative=T,mixed=F)
 {
   r = sqrt(r2)
   scores = numeric(nfam)
@@ -46,11 +46,18 @@ simulate_exclude_high = function(r2,K,n,qs,nfam=10000,parents_known,qf,qm,relati
       } else {
         x = xs[j,]
         scores = x+c
+        # If at least one embryo has score under the cutoff
         if (any(scores<t_exclude))
         {
-          s = min(which(scores<t_exclude))
+          s = min(which(scores<t_exclude)) # Take the first embryo with score under the cutoff
         } else {
-          s = 1
+          # If all embryos have scores above the cutoff
+          if (mixed) # Mixed strategy: in this case take the embryo with the lowest score 
+          {
+            s = which.min(scores)
+          } else { # Otherwise take the first embryo
+            s = 1  
+          }
         }
         liab = scores[s]+env
       }
