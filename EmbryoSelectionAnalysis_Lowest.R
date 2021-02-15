@@ -16,21 +16,27 @@ risk_reduction_lowest = function(r2,K,n)
   return(reduction)
 }
 
-risk_reduction_lowest_conditional = function(r2,K,n,qf,qm,relative=T)
+risk_reduction_lowest_conditional = function(r2,K,n,qf,qm,relative=T,parental_avg_given=F)
 {
   r = sqrt(r2)
   zk = qnorm(K, lower.tail=F)
   zqf = qnorm(qf/100)
   zqm = qnorm(qm/100)
-  c = (zqf+zqm)/2 * r
-  baseline= pnorm((zk-c)/sqrt(1-r^2/2),lower.tail=F)
+  if (parental_avg_given)
+  {
+    # It is assumed that what is given is directly the parental average, so that the paternal and maternal quantiles are the same (both representing the quantile of the parental average)
+    c = zqf * r/sqrt(2)
+  } else {
+    c = (zqf+zqm)/2 * r
+  }
+  baseline = pnorm((zk-c)/sqrt(1-r^2/2),lower.tail=F)
   integrand_lowest_cond = function(t)
   {
     arg = (zk-c-t*sqrt(1-r^2)) / (r/sqrt(2))
     y = dnorm(t)*pnorm(arg, lower.tail=F)^n
     return(y)
   }
-  risk = integrate(integrand_lowest_cond,-Inf,Inf)$value
+  risk = integrate(integrand_lowest_cond,-Inf,Inf,rel.tol=1e-9)$value
   if (relative) {
     reduction = (baseline-risk)/baseline
   } else {
