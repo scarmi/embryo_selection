@@ -40,7 +40,7 @@ for (ki in seq_along(Ks))
     legs[ri] = as.expression(bquote('r'^'2'*'='*.(r2)))
   }
   legend('topright',legs,col=colors,pch=0:2,bty='n',cex=1.3,text.col='DarkBlue',lwd=2)
-  text(3,93,labels[ki],cex=2)
+  text(9,0.45,labels[ki],cex=2)
 }
 dev.off()
 
