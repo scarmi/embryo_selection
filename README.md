@@ -1,0 +1,2 @@
+This repository includes all code that was used to generate figures and results for the paper:
+T. Lencz et al., Utility of polygenic embryo screening for disease depends on the selection strategy, eLife, 2021.

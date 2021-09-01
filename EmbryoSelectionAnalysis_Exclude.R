@@ -194,7 +194,7 @@ risk_reduction_exclude_family_history = function(r2,h2,K,q,n,df,dm)
       
       gamma = zq*sqrt(2) - c/(r/sqrt(2))
       # cat(sprintf("gamma=%g, c=%g, gm=%g, gf=%g\n",gamma,c,gm,gf))
-      internal_int = integrate(integrand_t,-Inf,gamma,gm,gf,rel.tol = 1e-5)$value
+      internal_int = integrate(integrand_t,-Inf,gamma,gm,gf,rel.tol = 1e-6)$value
       #cat(sprintf("internal_int1=%g\n",internal_int))
       denom = pnorm(gamma)
       if (denom==0) {denom=1e-300} # Avoid dividing by zero

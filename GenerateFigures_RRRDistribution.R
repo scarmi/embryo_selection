@@ -12,7 +12,7 @@ labels = c('A','B','C')
 
 risk_red_lowestrisk_th_all = readRDS(file = input_file)
 
-png(output_file,2400,1000,res=300)
+#png(output_file,2400,1000,res=300)
 par(mfrow=c(1,length(Ks)),mar=c(4,5.5,2,1),yaxs='i',xaxs='i')
 
 for (ki in seq_along(Ks))

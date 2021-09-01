@@ -8,7 +8,7 @@ rhos = c(-0.3,seq(-0.2,-0.05,by=0.05))
 colors = magma(length(rhos)+1)[1:(length(rhos))]
 
 input_file = "./Data/lowest_risk_two_taits.rds"
-output_file = "../Figures/LowestRisk_TwoTraits.png"
+output_file = "../../Figures/LowestRisk_TwoTraits.png"
 
 ns = seq(1,20)
 labels = c('A','B','C')
@@ -38,13 +38,13 @@ for (ki in seq_along(Ks))
   segments(ns[index],risk_red_target[index]*100,-10,risk_red_target[index]*100,col='black',lty=1,lwd=1.5)
   
   legs = numeric()
-  legs[1] = 'Selected trait (risk reduction)'
+  legs[1] = 'Target disease (risk reduction)'
   for (rhi in seq_along(rhos))
   {
-    legs[rhi+1] = as.expression(bquote("Correlated trait, "~rho==.(rhos[rhi])))
+    legs[rhi+1] = as.expression(bquote("Correlated disease, "~rho==.(rhos[rhi])))
   }
 
-  legend('topleft',legs,col=c('DarkSlateGray',colors),pch=c(0,rep(1,length(rhos))),lty=1,bty='n',cex=1.25)
-  text(18,93,labels[ki],cex=1.8)
+  legend('topleft',legs,col=c('DarkSlateGray',colors),pch=c(0,rep(1,length(rhos))),lty=1,bty='n',cex=1.2)
+  text(18.5,93,labels[ki],cex=1.8)
 }
 dev.off()
