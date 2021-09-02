@@ -1,50 +1,6 @@
 
 library(MASS)
 
-risk_reduction_exclude_appx1 = function(r2,K,q)
-{
-  r = sqrt(r2)
-  zk = qnorm(K, lower.tail=F)
-  zq = qnorm(q, lower.tail=F)
-  integrand_exclude = function(t)
-  {
-    y = dnorm(t)*pnorm((zk-r*t)/sqrt(1-r^2),lower.tail=F)
-    return(y)
-  }
-  risk = integrate(integrand_exclude,-Inf,zq)$value / (1-q)
-  reduction = (K-risk)/K
-  return(reduction)
-}
-
-risk_reduction_exclude_appx2 = function(r2,K,q)
-{
-  r = sqrt(r2)
-  zk = qnorm(K, lower.tail=F)
-  zq = qnorm(q, lower.tail=F)
-  a = zq*sqrt(2)
-  integrand_t = function(t,x)
-  {
-    y = dnorm(t)*pnorm((zk-r/sqrt(2)*(x+t))/sqrt(1-r^2),lower.tail=F)
-    return(y)
-  }
-  integrand_x = function(xs)
-  {
-    y = numeric(length(xs))
-    for (i in seq_along(xs))
-    {
-      x = xs[i]
-      internal_int = integrate(integrand_t,-Inf,a-x,x)$value
-      denom = pnorm(a-x)
-      if (denom==0) {denom=1e-300} # Avoid dividing by zero
-      y[i] = dnorm(x)*internal_int/denom
-    }
-    return(y)
-  }
-  risk = integrate(integrand_x,-Inf,Inf)$value
-  reduction = (K-risk)/K
-  return(reduction)
-}
-
 risk_reduction_exclude = function(r2,K,q,n)
 {
   r = sqrt(r2)
@@ -176,12 +132,8 @@ risk_reduction_exclude_family_history = function(r2,h2,K,q,n,df,dm)
   
   integrand_t = function(t,gm,gf)
   {
-    #print(t)
-    #cat(sprintf("gm=%g, gf=%g\n",gm,gf))
     arg = (zk-t*r/sqrt(2)-(gm+gf)/2)/sqrt(1-h^2/2-r^2/2)
-    #print(arg)
     y = dnorm(t)*pnorm(arg,lower.tail=F)
-    #print(y)
     return(y)
   }
   
@@ -193,16 +145,13 @@ risk_reduction_exclude_family_history = function(r2,h2,K,q,n,df,dm)
       c = cs[i]
       
       gamma = zq*sqrt(2) - c/(r/sqrt(2))
-      # cat(sprintf("gamma=%g, c=%g, gm=%g, gf=%g\n",gamma,c,gm,gf))
       internal_int = integrate(integrand_t,-Inf,gamma,gm,gf,rel.tol = 1e-6)$value
-      #cat(sprintf("internal_int1=%g\n",internal_int))
       denom = pnorm(gamma)
       if (denom==0) {denom=1e-300} # Avoid dividing by zero
       numer = (1-pnorm(gamma,lower.tail=F)^n) * internal_int
       term1 = numer/denom
       
       internal_int = integrate(integrand_t,gamma,Inf,gm,gf)$value
-      #cat(sprintf("internal_int2=%g\n",internal_int))
       term2 = pnorm(gamma,lower.tail=F)^(n-1) * internal_int
       
       y[i] = term1 + term2

@@ -122,6 +122,7 @@ risk_reduction_lowest_family_history = function(r2,h2,K,n,df,dm)
   return(c(risk_baseline,risk_selection,relative_reduction,abs_reduction))
 }
   
+# A slower implementation - do not use
 risk_reduction_lowest_family_history_long = function(r2,h2,K,n,df,dm,relative=T)
 {
   r = sqrt(r2)
