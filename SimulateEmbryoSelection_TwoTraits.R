@@ -14,7 +14,7 @@ simulate_lowest_risk_two_traits = function(r2A,r2B,rho,KA,KB,ns,nfam=10000)
   baselineB = numeric(length(ns))
   
   t_sickA = qnorm(1-KA)
-  t_sickB = qnorm(1-KA)
+  t_sickB = qnorm(1-KB)
   
   rA = sqrt(r2A)
   rB = sqrt(r2B)
